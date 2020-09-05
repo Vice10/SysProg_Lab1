@@ -1,4 +1,4 @@
-# SysProg_Lab1
+# SysProg_Lab1 - Task 7
 
 1) Reads text in "in.txt" and parses it
 
