@@ -5,3 +5,9 @@
 2) Counts amount of occurrences of each word
 
 3) Outputs top-n most frequent words into console
+
+# Expected output:
+
+sd: 3
+hello: 2
+sdsds: 1
