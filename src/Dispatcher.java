@@ -8,13 +8,13 @@ public class Dispatcher {
     public static void main(String[] argv){
         String text = inputFile("in.txt");
         WordsPrep wp = new WordsPrep(text);
-        String[] words = wp.getSeparatedWords();
+        String[] words = wp.getReadyWords();
         if (words == null){
             System.out.println("Empty input. Try again...");
             System.exit(1);
         }
         WordsCounter wc = new WordsCounter(words);
-        wc.displayWordCount(3);
+        wc.displayWordCount();
     }
 
     public static String inputFile(String fileName){
@@ -62,6 +62,7 @@ class WordsCounter {
             System.out.println(entry.getKey() + ": " + entry.getValue());
         }
     }
+
     public boolean displayWordCount(int wordsNum) {
         if(wordsNum <= map.size() && wordsNum > 0) {
             Iterator<Map.Entry<String, Integer>> it = map.entrySet().iterator();
@@ -79,42 +80,40 @@ class WordsCounter {
 class WordsPrep {
     String[] words;
     String[] separatedWords;
-    int blanksCount = 0;
+    String[] readyWords;
+    int count = 0;
 
     public WordsPrep(String rawText) {
-        words = rawText.split("\\s+");
+        words = rawText.split("(?=[,.])|\\s+");
         removeNonLiteral();
-        removeEmptyStrings();
-        shortenWords();
+        cutWords();
     }
 
-    private void removeNonLiteral(){
-        for (int i = 0; i < words.length; i++){
-            words[i] = words[i].replaceAll("[^\\w]", "");
-            if (words[i].isEmpty()) blanksCount++;
-        }
-    }
-
-    private void removeEmptyStrings() {
-        separatedWords = new String[words.length - blanksCount];
+    private void removeNonLiteral() {
+        separatedWords = new String[words.length];
         int j = -1;
         for (int i = 0; i < words.length; i++){
-            if(!words[i].isEmpty())
-                separatedWords[++j] = words[i];
+            if(!words[i].isEmpty() && words[i].matches("^[a-zA-Z'\'-]{0,200}$"))
+                separatedWords[++j] = words[i].toLowerCase();
         }
+        count = words.length - (j+1);
     }
 
-    private void shortenWords() { //and make all words lowercase
-        for (int i = 0; i < separatedWords.length; i++){
-            separatedWords[i].toLowerCase();
-            if(separatedWords[i].length() > 30)
-                separatedWords[i] = separatedWords[i].substring(0, 30);
-        }
-    }
-
-    public String[] getSeparatedWords() {
+    private void cutWords() {
         if(separatedWords.length == 0)
+            return;
+        readyWords = new String[separatedWords.length - count];
+        for(int i = 0; i < readyWords.length; i++){
+            if(separatedWords[i].length() > 30)
+                readyWords[i] = separatedWords[i].substring(0, 30);
+            else
+                readyWords[i] = separatedWords[i];
+        }
+    }
+
+    public String[] getReadyWords(){
+        if(readyWords.length == 0)
             return null;
-        return separatedWords;
+        return readyWords;
     }
 }
