@@ -9,5 +9,10 @@
 # Expected output:
 
 sd: 3
-hello: 2
+o'clock: 1
 sdsds: 1
+sdd: 1
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa: 1
+wo'rl-ds: 1
+hello: 1
+hshsh: 1
